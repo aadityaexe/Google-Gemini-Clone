@@ -2,10 +2,9 @@
 /* eslint-disable react/prop-types */
 import { createContext, useState } from "react";
 import run from "../config/grmini";
-
 export const Context = createContext();
 
-const ContextProvider = ({ children }) => {
+const ContextProvider = (props) => {
   const [input, setInput] = useState("");
   const [recentPrompt, setRecentPrompt] = useState("");
   const [prevPrompts, setPrevPrompts] = useState([]);
@@ -14,44 +13,48 @@ const ContextProvider = ({ children }) => {
   const [resultData, setResultData] = useState("");
 
   const delayPara = (index, nextword) => {
-    setTimeout(() => {
+    setTimeout(function () {
       setResultData((prev) => prev + nextword);
     }, 75 * index);
   };
-
   const newChat = () => {
     setLoading(false);
     setShowResult(false);
   };
-
   const onSent = async (prompt) => {
     setResultData("");
     setLoading(true);
     setShowResult(true);
-    let response;
-
-    if (prompt) {
-      response = await run(prompt);
+    let responce;
+    if (prompt !== undefined) {
+      responce = await run(prompt);
       setRecentPrompt(prompt);
     } else {
       setPrevPrompts((prev) => [...prev, input]);
       setRecentPrompt(input);
-      response = await run(input);
+      responce = await run(input);
     }
 
-    let responseArray = response.split("**");
-    let newResponse = responseArray
-      .map((item, index) => (index % 2 === 1 ? `<b>${item}</b>` : item))
-      .join("");
-    let newResponseArray = newResponse.split(" ");
-
-    newResponseArray.forEach((word, index) => delayPara(index, word + " "));
-    setResultData(newResponse);
+    let responseArray = responce.split("**");
+    let newResponce = "";
+    for (let i = 0; i < responseArray.length; i++) {
+      if (i === 0 || i % 2 !== 1) {
+        newResponce += responseArray[i];
+      } else {
+        newResponce += "<b>" + responseArray[i] + "</b>";
+      }
+    }
+    let newResponcetwo = newResponce.split("*").join("</br>");
+    let newResponceArray = newResponcetwo.split(" ");
+    for (let i = 0; i < newResponceArray.length; i++) {
+      const nextword = newResponceArray[i];
+      delayPara(i, nextword + " ");
+    }
+    setResultData(newResponcetwo);
     setLoading(false);
     setInput("");
   };
-
-  const contextValue = {
+  const ContextValue = {
     prevPrompts,
     setPrevPrompts,
     loading,
@@ -67,8 +70,9 @@ const ContextProvider = ({ children }) => {
     setInput,
     newChat,
   };
-
-  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
+  return (
+    <Context.Provider value={ContextValue}>{props.children}</Context.Provider>
+  );
 };
 
 export default ContextProvider;
