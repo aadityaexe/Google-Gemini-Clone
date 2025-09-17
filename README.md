@@ -4,6 +4,7 @@ Google Gemini Clone is a responsive, interactive, and scalable web application i
 
 ## Features
 
+
 - **Interactive UI**: A seamless and responsive user interface.
 - **Custom Animations**: Smooth transitions and animations for an enhanced user experience.
 - **Responsive Design**: Optimized for desktop, tablet, and mobile views.
