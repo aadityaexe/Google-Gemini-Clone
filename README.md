@@ -1,7 +1,5 @@
 # Google Gemini Clone
 
-
-
 Google Gemini Clone is a responsive, interactive, and scalable web application inspired by the design and functionality of Google Gemini. Built using modern web technologies, it serves as a showcase of UI/UX skills and front-end development expertise.
 
 ## Features
